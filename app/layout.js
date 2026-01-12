@@ -3,7 +3,7 @@ import './globals.css'
 
 const oswald = Oswald({ 
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '900'],
+  weight: 'variable',
   variable: '--font-oswald',
   display: 'swap',
 })
