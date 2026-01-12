@@ -1,26 +1,34 @@
 'use client'
 
-import { useState } from 'react'
-import Link from 'next/link'
+import { useState, useEffect, Suspense } from 'react'
+import { useSearchParams } from 'next/navigation'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
 import CartSidebar from '@/components/CartSidebar'
 import { products, categories } from '@/lib/products'
 
-export default function Home() {
-  const [selectedCategory, setSelectedCategory] = useState("ALL");
-  const [cart, setCart] = useState([]);
-  const [showCart, setShowCart] = useState(false);
+function ShopContent() {
+  const searchParams = useSearchParams()
+  const [selectedCategory, setSelectedCategory] = useState("ALL")
+  const [cart, setCart] = useState([])
+  const [showCart, setShowCart] = useState(false)
+
+  useEffect(() => {
+    const categoryParam = searchParams.get('category')
+    if (categoryParam) {
+      setSelectedCategory(categoryParam.toUpperCase())
+    }
+  }, [searchParams])
 
   const filteredProducts = selectedCategory === "ALL" 
     ? products 
-    : products.filter(p => p.category.toUpperCase() === selectedCategory);
+    : products.filter(p => p.category.toUpperCase() === selectedCategory)
 
   const addToCart = (product) => {
-    setCart([...cart, product]);
-  };
+    setCart([...cart, product])
+  }
 
-  const cartTotal = cart.reduce((sum, item) => sum + item.price, 0);
+  const cartTotal = cart.reduce((sum, item) => sum + item.price, 0)
 
   return (
     <div style={{
@@ -52,7 +60,7 @@ export default function Home() {
 
       {/* Hero Section */}
       <section style={{
-        padding: '80px 40px',
+        padding: '80px 40px 60px',
         textAlign: 'center',
         position: 'relative',
         background: `
@@ -60,24 +68,6 @@ export default function Home() {
           radial-gradient(ellipse at 80% 50%, rgba(30, 64, 175, 0.15) 0%, transparent 50%)
         `
       }}>
-        {/* Decorative Stars */}
-        <div style={{
-          position: 'absolute',
-          top: '20px',
-          left: '10%',
-          fontSize: '60px',
-          opacity: 0.1,
-          transform: 'rotate(-15deg)'
-        }}>★</div>
-        <div style={{
-          position: 'absolute',
-          bottom: '20px',
-          right: '10%',
-          fontSize: '80px',
-          opacity: 0.1,
-          transform: 'rotate(15deg)'
-        }}>★</div>
-
         <div style={{
           display: 'inline-block',
           background: '#DC2626',
@@ -88,104 +78,34 @@ export default function Home() {
           marginBottom: '20px',
           clipPath: 'polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%)'
         }}>
-          🇺🇸 STAND WITH AMERICA 🇺🇸
+          🇺🇸 SHOP PATRIOT GEAR 🇺🇸
         </div>
 
         <h1 style={{
-          fontSize: 'clamp(48px, 10vw, 120px)',
+          fontSize: 'clamp(48px, 10vw, 100px)',
           fontWeight: 900,
           letterSpacing: '8px',
           lineHeight: 0.9,
           margin: '0 0 20px 0',
           textShadow: '4px 4px 0 #DC2626, 8px 8px 0 #1E40AF'
         }}>
-          GEAR UP,<br/>
-          <span style={{ color: '#DC2626' }}>PATRIOT</span>
+          ALL PRODUCTS
         </h1>
 
         <p style={{
           fontSize: '18px',
           color: '#A8A29E',
           maxWidth: '600px',
-          margin: '0 auto 40px',
+          margin: '0 auto',
           lineHeight: 1.6,
           letterSpacing: '1px'
         }}>
-          Premium apparel and merchandise for Americans who love their country, 
-          support law enforcement, and stand for secure borders.
+          Browse our complete collection of premium American-made merchandise
         </p>
-
-        <div style={{ display: 'flex', gap: '20px', justifyContent: 'center', flexWrap: 'wrap' }}>
-          <Link href="/shop">
-            <button style={{
-              background: 'linear-gradient(135deg, #DC2626 0%, #991B1B 100%)',
-              border: '2px solid #DC2626',
-              padding: '18px 48px',
-              color: '#FAFAF9',
-              fontSize: '16px',
-              fontWeight: 800,
-              letterSpacing: '3px',
-              cursor: 'pointer',
-              transition: 'all 0.3s',
-              clipPath: 'polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px)'
-            }}>
-              SHOP NOW →
-            </button>
-          </Link>
-          <Link href="/shop?category=APPAREL">
-            <button style={{
-              background: 'transparent',
-              border: '2px solid #1E40AF',
-              padding: '18px 48px',
-              color: '#FAFAF9',
-              fontSize: '16px',
-              fontWeight: 800,
-              letterSpacing: '3px',
-              cursor: 'pointer',
-              transition: 'all 0.3s',
-              clipPath: 'polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px)'
-            }}>
-              NEW ARRIVALS
-            </button>
-          </Link>
-        </div>
-
-        {/* Stats Bar */}
-        <div style={{
-          display: 'flex',
-          justifyContent: 'center',
-          gap: '60px',
-          marginTop: '60px',
-          padding: '30px',
-          background: 'rgba(255,255,255,0.03)',
-          borderTop: '1px solid rgba(255,255,255,0.1)',
-          borderBottom: '1px solid rgba(255,255,255,0.1)',
-          flexWrap: 'wrap'
-        }}>
-          {[
-            { num: '50K+', label: 'PATRIOTS SERVED' },
-            { num: '100%', label: 'MADE IN USA' },
-            { num: '4.9★', label: 'CUSTOMER RATING' },
-            { num: '24HR', label: 'FAST SHIPPING' }
-          ].map(stat => (
-            <div key={stat.label}>
-              <div style={{
-                fontSize: '36px',
-                fontWeight: 900,
-                color: '#DC2626'
-              }}>{stat.num}</div>
-              <div style={{
-                fontSize: '11px',
-                letterSpacing: '2px',
-                color: '#A8A29E'
-              }}>{stat.label}</div>
-            </div>
-          ))}
-        </div>
       </section>
 
       {/* Category Filter */}
-      <section style={{ padding: '0 40px 40px' }}>
+      <section style={{ padding: '40px 40px' }}>
         <div style={{
           display: 'flex',
           gap: '15px',
@@ -212,6 +132,15 @@ export default function Home() {
             </button>
           ))}
         </div>
+        <p style={{
+          textAlign: 'center',
+          marginTop: '20px',
+          color: '#78716C',
+          fontSize: '13px',
+          letterSpacing: '1px'
+        }}>
+          Showing {filteredProducts.length} {selectedCategory === 'ALL' ? 'products' : selectedCategory.toLowerCase()}
+        </p>
       </section>
 
       {/* Products Grid */}
@@ -235,14 +164,14 @@ export default function Home() {
               animation: `fadeIn 0.5s ease ${index * 0.05}s both`
             }}
             onMouseEnter={e => {
-              e.currentTarget.style.transform = 'translateY(-8px)';
-              e.currentTarget.style.borderColor = '#DC2626';
-              e.currentTarget.style.boxShadow = '0 20px 40px rgba(220, 38, 38, 0.2)';
+              e.currentTarget.style.transform = 'translateY(-8px)'
+              e.currentTarget.style.borderColor = '#DC2626'
+              e.currentTarget.style.boxShadow = '0 20px 40px rgba(220, 38, 38, 0.2)'
             }}
             onMouseLeave={e => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.borderColor = '#292524';
-              e.currentTarget.style.boxShadow = 'none';
+              e.currentTarget.style.transform = 'translateY(0)'
+              e.currentTarget.style.borderColor = '#292524'
+              e.currentTarget.style.boxShadow = 'none'
             }}
           >
             {product.badge && (
@@ -311,12 +240,12 @@ export default function Home() {
                     transition: 'all 0.3s'
                   }}
                   onMouseEnter={e => {
-                    e.target.style.background = '#DC2626';
-                    e.target.style.color = '#FAFAF9';
+                    e.target.style.background = '#DC2626'
+                    e.target.style.color = '#FAFAF9'
                   }}
                   onMouseLeave={e => {
-                    e.target.style.background = '#FAFAF9';
-                    e.target.style.color = '#0A0A0A';
+                    e.target.style.background = '#FAFAF9'
+                    e.target.style.color = '#0A0A0A'
                   }}
                 >
                   ADD TO CART
@@ -327,72 +256,28 @@ export default function Home() {
         ))}
       </section>
 
-      {/* Banner */}
-      <section style={{
-        margin: '0 40px 80px',
-        padding: '60px',
-        background: `
-          linear-gradient(135deg, rgba(220, 38, 38, 0.9) 0%, rgba(30, 64, 175, 0.9) 100%),
-          url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="50" font-size="80">🇺🇸</text></svg>')
-        `,
-        textAlign: 'center',
-        position: 'relative',
-        clipPath: 'polygon(0 0, 100% 0, 100% calc(100% - 30px), calc(100% - 30px) 100%, 30px 100%, 0 calc(100% - 30px))'
-      }}>
-        <h2 style={{
-          fontSize: '48px',
-          fontWeight: 900,
-          letterSpacing: '6px',
-          margin: '0 0 15px',
-          textTransform: 'uppercase'
-        }}>
-          Join 50,000+ Patriots
-        </h2>
-        <p style={{
-          fontSize: '16px',
-          opacity: 0.9,
-          marginBottom: '30px',
-          letterSpacing: '2px'
-        }}>
-          Get 15% off your first order when you sign up for our newsletter
-        </p>
-        <div style={{
-          display: 'flex',
-          gap: '0',
-          maxWidth: '500px',
-          margin: '0 auto'
-        }}>
-          <input
-            type="email"
-            placeholder="ENTER YOUR EMAIL"
-            style={{
-              flex: 1,
-              padding: '18px 24px',
-              border: 'none',
-              fontSize: '13px',
-              letterSpacing: '2px',
-              fontWeight: 600,
-              background: '#FAFAF9',
-              color: '#0A0A0A'
-            }}
-          />
-          <button style={{
-            background: '#0A0A0A',
-            border: 'none',
-            padding: '18px 32px',
-            color: '#FAFAF9',
-            fontSize: '13px',
-            fontWeight: 800,
-            letterSpacing: '2px',
-            cursor: 'pointer'
-          }}>
-            SUBSCRIBE
-          </button>
-        </div>
-      </section>
-
       <Footer />
       <CartSidebar showCart={showCart} setShowCart={setShowCart} cart={cart} cartTotal={cartTotal} />
     </div>
-  );
+  )
+}
+
+export default function ShopPage() {
+  return (
+    <Suspense fallback={
+      <div style={{
+        minHeight: '100vh',
+        background: 'linear-gradient(180deg, #0A0A0A 0%, #1C1917 100%)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: '#FAFAF9',
+        fontFamily: "'Oswald', 'Impact', sans-serif"
+      }}>
+        <div style={{ fontSize: '24px', letterSpacing: '4px' }}>LOADING...</div>
+      </div>
+    }>
+      <ShopContent />
+    </Suspense>
+  )
 }
