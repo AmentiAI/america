@@ -1,5 +1,7 @@
 'use client'
 
+import Image from 'next/image'
+
 export default function CartSidebar({ showCart, setShowCart, cart, cartTotal }) {
   if (!showCart) return null
 
@@ -67,15 +69,22 @@ export default function CartSidebar({ showCart, setShowCart, cart, cartTotal }) 
                 padding: '15px 0',
                 borderBottom: '1px solid #292524'
               }}>
-                <div style={{
-                  width: '60px',
-                  height: '60px',
-                  background: '#1C1917',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '30px'
-                }}>{item.image}</div>
+                  <div style={{
+                    width: '60px',
+                    height: '60px',
+                    background: '#1C1917',
+                    position: 'relative',
+                    overflow: 'hidden',
+                    flexShrink: 0
+                  }}>
+                    <Image
+                      src={item.image}
+                      alt={item.name}
+                      fill
+                      style={{ objectFit: 'contain', padding: '5px' }}
+                      sizes="60px"
+                    />
+                  </div>
                 <div style={{ flex: 1 }}>
                   <p style={{
                     fontSize: '13px',

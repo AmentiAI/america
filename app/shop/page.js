@@ -2,6 +2,7 @@
 
 import { useState, useEffect, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
+import Image from 'next/image'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
 import CartSidebar from '@/components/CartSidebar'
@@ -195,11 +196,18 @@ function ShopContent() {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: '80px',
               background: `linear-gradient(135deg, ${product.color}22 0%, transparent 100%)`,
-              borderBottom: '1px solid #292524'
+              borderBottom: '1px solid #292524',
+              position: 'relative',
+              overflow: 'hidden'
             }}>
-              {product.image}
+              <Image
+                src={product.image}
+                alt={product.name}
+                fill
+                style={{ objectFit: 'contain', padding: '20px' }}
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              />
             </div>
 
             <div style={{ padding: '25px' }}>
